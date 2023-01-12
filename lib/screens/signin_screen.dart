@@ -1,59 +1,90 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import 'package:nnnnnnnnnn/utils/colors_utils.dart';
 
-import '../resuable_widget/resucable_widget.dart';
-
-class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Container(
-      // to make it the size of the width of the device
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-
-      // decoration for the background
-
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-            colors: [
-              hexStringToColor("CB2B93"),
-              hexStringToColor("9546C4"),
-              hexStringToColor("5E61F4"),
-            ],
-
-            // for the direction of the gradient
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter),
-      ),
-
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(
-
-              // for the media query of the logo
-              20,
-              MediaQuery.of(context).size.height * 0.2,
-              20,
-              0),
-          child: Column(
-            // location of the logo
-            children: <Widget>[
-              // calling the logo
-              logoWidget("assets/images/logo.png")
-            ],
+    return Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "My App Title",
+            style: TextStyle(
+                color: Colors.black, fontSize: 28, fontWeight: FontWeight.bold),
           ),
-        ),
+          Text(
+            "Login to your App",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 44.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(
+            height: 44,
+          ),
+          TextField(
+            keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+                hintText: "User Email",
+                prefixIcon: Icon(
+                  Icons.mail,
+                  color: Colors.black,
+                )),
+          ),
+          SizedBox(
+            height: 26.0,
+          ),
+          TextField(
+            obscureText: true,
+            decoration: InputDecoration(
+                hintText: "User Password",
+                prefixIcon: Icon(
+                  Icons.lock,
+                  color: Colors.black,
+                )),
+          ),
+          SizedBox(
+            height: 12,
+          ),
+          Text(
+            "Don't remember your password?",
+            style: TextStyle(color: Colors.blue),
+          ),
+          SizedBox(
+            height: 88,
+          ),
+          Container(
+            width: double.infinity,
+            child: RawMaterialButton(
+              fillColor: Color(0xFF0069FE),
+              elevation: 0.0,
+              padding: EdgeInsets.symmetric(vertical: 20),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              onPressed: () {},
+              child: Text(
+                "Login",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                ),
+              ),
+            ),
+          )
+        ],
       ),
-    ));
+    );
   }
 }
-
-
