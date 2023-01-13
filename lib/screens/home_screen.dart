@@ -29,6 +29,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   borderRadius: BorderRadius.circular(12)),
               onPressed: () async {
                 await FirebaseAuth.instance.signOut();
+                Navigator.of(context).pop(LoginScreen());
               },
               child: Text(
                 "Login",
