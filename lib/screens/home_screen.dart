@@ -10,9 +10,23 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  static Future<User?> LogOut() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user;
+    try {
+      await FirebaseAuth.instance.signOut();
+      user = user;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == "Already signed out") {
+        print("No User found for that email");
+      }
+    }
+
+    return user;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
     return Scaffold(
       body: Column(
         children: [
@@ -28,11 +42,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
               onPressed: () async {
-                await FirebaseAuth.instance.signOut();
-                runApp(new MaterialApp(
-                  home: new LoginScreen(),
-                ));
+                // test
+                User? user = await LogOut(), print;
+                (user);
+                if (user == null) {
+                  Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => LoginScreen()));
+                  // lets make a new screen
+                }
               },
+              // Navigator.of(context).push(MaterialPageRoute(
+              //     builder: ((context) => const LoginScreen())));
+
               child: Text(
                 "Login",
                 style: TextStyle(
