@@ -12,23 +12,22 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  static Future<User?> loginUsingEmailPassword(
-      {required String email,
-      required String password,
-      required BuildContext context}) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User? user;
-    try {
-      UserCredential userCredential = await auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      user = userCredential.user;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == "user-not-found") {
-        print("No User found for that email");
-      }
-    }
+  // required so we can controll whats in the text feild
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
-    return user;
+  Future signIn() async {
+    // adding Firebase sign in method for the login
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim());
+  }
+
+  // for the memory of the app
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
   }
 
   @override
@@ -38,94 +37,105 @@ class _LoginScreenState extends State<LoginScreen> {
     TextEditingController _passwordController = TextEditingController();
     return Padding(
       padding: EdgeInsets.all(16.0),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "My App Title",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold),
-            ),
-            Text(
-              "Login to your App",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 44.0,
-                fontWeight: FontWeight.bold,
+      child: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "My App Title",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold),
               ),
-            ),
-            SizedBox(
-              height: 44,
-            ),
-            TextField(
-              controller: _emailController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                  hintText: "User Email",
-                  prefixIcon: Icon(
-                    Icons.mail,
-                    color: Colors.black,
-                  )),
-            ),
-            SizedBox(
-              height: 26.0,
-            ),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                  hintText: "User Password",
-                  prefixIcon: Icon(
-                    Icons.lock,
-                    color: Colors.black,
-                  )),
-            ),
-            SizedBox(
-              height: 12,
-            ),
-            Text(
-              "Don't remember your password?",
-              style: TextStyle(color: Colors.blue),
-            ),
-            SizedBox(
-              height: 88,
-            ),
-            Container(
-              width: double.infinity,
-              child: RawMaterialButton(
-                fillColor: Color(0xFF0069FE),
-                elevation: 0.0,
-                padding: EdgeInsets.symmetric(vertical: 20),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-                onPressed: () async {
-                  // test
-                  User? user = await loginUsingEmailPassword(
-                          email: _emailController.text,
-                          password: _passwordController.text,
-                          context: context),
-                      print;
-                  (user);
-                  if (user != null) {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => ProfileScreen()));
-                    // lets make a new screen
-                  }
-                },
-                child: Text(
-                  "Login",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                  ),
+              Text(
+                "Login to your App",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 44.0,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            )
-          ],
+              SizedBox(
+                height: 44,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 0),
+                child: TextField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                      hintText: "Email",
+                      prefixIcon: Icon(
+                        Icons.mail,
+                        color: Colors.black,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.deepPurple),
+                        borderRadius: BorderRadius.circular(12),
+                      )),
+                ),
+              ),
+              SizedBox(
+                height: 12.0,
+              ),
+              TextField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                    hintText: "User Password",
+                    prefixIcon: Icon(
+                      Icons.lock,
+                      color: Colors.black,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.deepPurple),
+                      borderRadius: BorderRadius.circular(12),
+                    )),
+              ),
+              SizedBox(
+                height: 12,
+              ),
+              Text(
+                "Don't remember your password?",
+                style: TextStyle(color: Colors.blue),
+              ),
+              SizedBox(
+                height: 88,
+              ),
+              Container(
+                width: double.infinity,
+                child: RawMaterialButton(
+                  fillColor: Color(0xFF0069FE),
+                  elevation: 0.0,
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  onPressed: () async {
+                    // calling the signIn() function above
+                    signIn();
+                  },
+                  child: Text(
+                    "Login",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

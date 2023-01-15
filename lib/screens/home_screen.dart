@@ -10,60 +10,56 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  static Future<User?> LogOut() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User? user;
-    try {
-      await FirebaseAuth.instance.signOut();
-      user = user;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == "Already signed out") {
-        print("No User found for that email");
-      }
-    }
-
-    return user;
-  }
+  // for adding the logged in user into the app
+  final user = FirebaseAuth.instance.currentUser!;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Center(
-            child: Text("Welcome to your profile Screen"),
-          ),
-          Container(
-            width: double.infinity,
-            child: RawMaterialButton(
-              fillColor: Color(0xFF0069FE),
-              elevation: 0.0,
-              padding: EdgeInsets.symmetric(vertical: 20),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              onPressed: () async {
-                // test
-                User? user = await LogOut(), print;
-                (user);
-                if (user == null) {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => LoginScreen()));
-                  // lets make a new screen
-                }
-              },
-              // Navigator.of(context).push(MaterialPageRoute(
-              //     builder: ((context) => const LoginScreen())));
+      body: Center(
+        child: Column(
+          children: [
+            // 2nd column
+            Column(
+              children: [
+                Text("Signed in as:"
 
-              child: Text(
-                "Login",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
+                    // added the user data that was imported for the top
+
+                    +
+                    user.email!),
+              ],
+            ),
+            // end of 2nd columnn
+
+            // for the button
+            Container(
+              width: double.infinity,
+              child: RawMaterialButton(
+                fillColor: Color(0xFF0069FE),
+                elevation: 0.0,
+                padding: EdgeInsets.symmetric(vertical: 20),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                onPressed: () async {
+                  // function for signing out
+
+                  FirebaseAuth.instance.signOut();
+                },
+                // Navigator.of(context).push(MaterialPageRoute(
+                //     builder: ((context) => const LoginScreen())));
+
+                child: Text(
+                  "Log Out",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
                 ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
